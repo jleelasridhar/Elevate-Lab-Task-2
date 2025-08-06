@@ -1,0 +1,94 @@
+Email(target)-My spam folder email -->Tutorials Point
+
+High-Level Summary
+
+SPF Pass (aligned)
+DKIM: Partially pass (body hash did not verify, domain alignment issue)
+DMARC:  Pass (but with p=quarantine)
+Delivered: Successfully reached inbox (not marked as spam)
+Relay: Fast (0-second delay)
+Sending platform: Sendinblue (now Brevo)
+DNS provider: Cloudflare
+
+
+Detailed Analysis
+
+1. SPF (Sender Policy Framework)
+
+Domain: shared-p900-i2.d.sender-sib.com
+IP 77.32.170.2 is authorized (passes SPF)
+Alignment is OK with the Return-Path and MailFrom domains.
+Pass and aligned* – this is good.
+
+
+2. DKIM (DomainKeys Identified Mail)
+
+Two DKIM signatures are present:
+
+One from tutorialspoint.com – fails body hash verification
+One from mailin.fr (Sendinblue/Brevo) –passes
+
+Issues:
+
+Body hash mismatch (bh doesn't match the actual body content). This could mean:
+
+The email was altered in transit.
+There's a bug or misconfiguration in the DKIM signing process.
+DKIM domain alignment*: the domain in From: (tutorialspoint.com) does not align with mailin.fr.
+
+Problem: This breaks DMARC alignment unless one DKIM signature aligns or SPF passes.
+
+
+
+3.DMARC (Domain-based Message Authentication, Reporting & Conformance)
+
+Policy: p=quarantine; pct=25
+
+ Only 25% of unauthenticated emails are quarantined.
+ Because SPF passes and aligns, DMARC passes, despite the DKIM issues.
+
+Passes, but not optimal – full DKIM alignment would improve security.
+
+
+
+4. Relay & Delivery Info
+
+Sent via: Sendinblue (shared IP)
+Email headers show no significant delay.
+Not on any blacklists.
+Delivered to Gmail without bounce or quarantine.
+
+Delivered promptly and not flagged as spam
+
+5.Header Anomalies / Observations
+
+The From: and Return-Path: mismatch slightly due to Sendinblue's default handling.
+Uses ARC headers (Authenticated Received Chain) – Gmail adds this for extra tracking and trust propagation.
+Proper unsubscribe mechanisms are in place (both mailto: and one-click List-Unsubscribe).
+
+
+ Is This Email Legitimate?
+
+Yes, most likely.Here's why:
+
+Sent through a reputable bulk sender (Sendinblue/Brevo)
+SPF passes and aligns
+DMARC passes
+Domain tutorialspoint.com is legitimate
+Links point to real Tutorialspoint domains
+Content matches expected marketing from Tutorials Point
+ No signs of spoofing/phishing
+
+ Minor Concerns:
+
+DKIM body hash failed verification – this should not happen and could impact deliverability if the DMARC policy were stricter.
+DKIM misalignment could also be improved for maximum compliance.
+
+
+Recommendation (for Tutorials Point or Sender Admins)
+
+If you're managing this domain:
+
+1. Ensure DKIM body hash signs correctly (check email body transformations post-signing).
+2. Consider stricter DMARC policy (p=reject) if you fix DKIM issues.
+3. Ensure DKIM domain matches the From: domain (alignment).
