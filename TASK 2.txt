@@ -1,3 +1,4 @@
+                                                             E-Mail Phishing Analysis
 Email(target)-My spam folder email -->Tutorials Point
 
 High-Level Summary
@@ -92,3 +93,4 @@ If you're managing this domain:
 1. Ensure DKIM body hash signs correctly (check email body transformations post-signing).
 2. Consider stricter DMARC policy (p=reject) if you fix DKIM issues.
 3. Ensure DKIM domain matches the From: domain (alignment).
+
